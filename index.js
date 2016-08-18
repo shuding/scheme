@@ -5,13 +5,8 @@ const T_NUMB = Symbol('t_numb')
 const T_STRI = Symbol('t_stri')
 const T_BOOL = Symbol('t_bool')
 
-class T {
-  constructor(scope = {}, parent = null) {
-    this.scope = scope
-    this.parent = parent
-  }
-
-  eval(raw, res = true) {
+class Tokenizer {
+  constructor(raw) {
     let str = raw.replace(/\n/g, ' ').trim()
     let type = T_NULL
     let args = []
@@ -29,7 +24,7 @@ class T {
       case /^(true|false)$/.test(str):
         type = T_BOOL
         break
-      case /^[a-zA-Z_\+\-\*/<>=]+[a-zA-Z_0-9]*$/.test(str):
+      case /^[a-zA-Z_\+\-\*/<>=\[\]]+[0-9a-zA-Z_\+\-\*/<>=\[\]]*$/.test(str):
         type = T_VARI
         break
       case /^"(\\"|[^"])"$/.test(str):
@@ -81,13 +76,24 @@ class T {
         break
     }
 
-    if (!res) {
-      return {
-        type,
-        str,
-        args
-      }
+    this.str = str
+    this.type = type
+    this.args = args
+  }
+}
+
+class Scope {
+  constructor(scope = {}, parent = null) {
+    this.scope = scope
+    this.parent = parent
+  }
+
+  eval(token) {
+    if (token.constructor != Tokenizer) {
+      token = new Tokenizer(token)
     }
+
+    const { type, str, args } = token
 
     switch (type) {
       case T_NULL:
@@ -117,7 +123,7 @@ class T {
 
 let define = function (s_a, s_b, s_c) {
   let scope = Object.assign({}, this.scope)
-  let a = this.eval(s_a, false)
+  let a = new Tokenizer(s_a)
 
   if (a.type === T_VARI) {
     scope[a.str] = s_b
@@ -127,10 +133,10 @@ let define = function (s_a, s_b, s_c) {
       for (let i = 1; i < a.args.length; ++i) {
         innerScope[a.args[i]] = args[i - 1]
       }
-      return (new T(innerScope, this)).eval(s_b)
+      return (new Scope(innerScope, this)).eval(s_b)
     }
   }
-  return (new T(scope, this)).eval(s_c)
+  return (new Scope(scope, this)).eval(s_c)
 }
 
 let scope = {
@@ -158,7 +164,7 @@ let scope = {
   },
   cond: function (...args) {
     for (let i = 0; i < args.length; ++i) {
-      let [condition, value] = this.eval(args[i], false).args
+      let [condition, value] = (new Tokenizer(args[i])).args
       if (this.eval(condition) === true) {
         return this.eval(value)
       }
@@ -183,9 +189,9 @@ let scope = {
   }
 }
 
-const rootScope = new T(scope)
+const rootScope = new Scope(scope)
 
-let t = new T({}, rootScope)
+let t = new Scope({}, rootScope)
 
 console.log(t.eval('(+ 1 (+ 2 (- 5 21)))'))
 
@@ -257,3 +263,16 @@ console.log(t.eval(`
               (true (+ (car x) (sum (cdr x)))))
         (sum (list 1 2 3)))
 `))
+
+// pi
+// t.eval(`(define (pi a b) (cond ((> a b) 0) (true (+ (/ 8 (* a (+ a 2))) (pi (+ 4 a) b)))) (pi 1 1000))`)
+
+// index
+console.log(t.eval(`
+(define ([] x i)
+        (cond ((= i 0) (car x))
+              (true ([] (cdr x) (- i 1))))
+        ([] (list 1 2 3) 2))
+`))
+
+module.exports = t
