@@ -68,10 +68,10 @@ Filter
 
 Index
 ```scheme
-(define ([] x i)
+(define (index x i)
         (cond ((= i 0) (car x))
-              (true ([] (cdr x) (- i 1)))))
-([] (list 1 2 3) 2)                          ; -> 3
+              (true (index (cdr x) (- i 1)))))
+(index (list 1 2 3) 2)                       ; -> 3
 ```
 
 ### Lambda
