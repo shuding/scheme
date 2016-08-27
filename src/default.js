@@ -27,8 +27,26 @@ let define = function (s_a, s_b, s_c) {
   return (new Scope(scope, this)).eval(s_c)
 }
 
+let lambda = function (s_a, s_b) {
+  let scope = Object.assign({}, this.scope)
+  let a = new Tokenizer(s_a)
+
+  return function (...args) {
+    let innerScope = Object.assign({}, this.scope)
+    if (a.type === T_EXPR) {
+      for (let i = 0; i < a.args.length; ++i) {
+        innerScope[a.args[i]] = args[i]
+      }
+    } else if (a.type === T_VARI) {
+      innerScope[a.str] = args[0]
+    }
+    return (new Scope(innerScope, this)).eval(s_b)
+  }
+}
+
 let defaults = {
   define,
+  lambda,
   '+': function (a, b) {
     return this.eval(a) + this.eval(b)
   },
