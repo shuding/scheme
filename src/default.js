@@ -9,8 +9,26 @@ var {
   T_STRI
 } = require('./core')
 
-let define = function (s_a, s_b, s_c) {
-  let scope = Object.assign({}, this.scope)
+// let define = function (s_a, s_b, s_c) {
+//   let scope = Object.assign({}, this.scope)
+//   let a = new Tokenizer(s_a)
+
+//   if (a.type === T_VARI) {
+//     scope[a.str] = s_b
+//   } else if (a.type === T_EXPR) {
+//     scope[a.args[0]] = function (...args) {
+//       let innerScope = Object.assign({}, this.scope)
+//       for (let i = 1; i < a.args.length; ++i) {
+//         innerScope[a.args[i]] = args[i - 1]
+//       }
+//       return (new Scope(innerScope, this)).eval(s_b)
+//     }
+//   }
+//   return (new Scope(scope, this)).eval(s_c)
+// }
+
+let define = function (s_a, s_b) {
+  let scope = this.scope // side effects
   let a = new Tokenizer(s_a)
 
   if (a.type === T_VARI) {
@@ -24,7 +42,6 @@ let define = function (s_a, s_b, s_c) {
       return (new Scope(innerScope, this)).eval(s_b)
     }
   }
-  return (new Scope(scope, this)).eval(s_c)
 }
 
 let lambda = function (s_a, s_b) {
@@ -32,7 +49,7 @@ let lambda = function (s_a, s_b) {
   let a = new Tokenizer(s_a)
 
   return function (...args) {
-    let innerScope = Object.assign({}, this.scope)
+    let innerScope = Object.assign({}, scope, this.scope)
     if (a.type === T_EXPR) {
       for (let i = 0; i < a.args.length; ++i) {
         innerScope[a.args[i]] = args[i]

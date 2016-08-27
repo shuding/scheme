@@ -88,7 +88,7 @@ class Scope {
     this.parent = parent
   }
 
-  eval(token, inherit = true) {
+  eval(token) {
     if (token.constructor != Tokenizer) {
       token = new Tokenizer(token)
     }
@@ -107,17 +107,23 @@ class Scope {
       case T_VARI:
         let v = this.scope[str]
         if (typeof v === 'undefined') {
-          return this.parent.eval(str, false)
+          return this.parent.eval(str)
         }
         if (typeof v === 'string') {
-          if (this.inherit) {
-            return this.parent.eval(v, false)
-          } else {
-            return this.eval(v, false)
+          if (this.parent) {
+            return this.parent.eval(v)
           }
+          return this.eval(v)
         }
         return v
       case T_EXPR:
+        let fnToken = new Tokenizer(args[0])
+        if (fnToken.type === T_VARI) {
+          let fn = this.scope[args[0]]
+          if (typeof fn === 'undefined') {
+            return this.parent.eval(args[0]).apply(this, args.slice(1))
+          }
+        }
         return this.eval(args[0]).apply(this, args.slice(1))
     }
   }
