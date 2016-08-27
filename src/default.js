@@ -32,15 +32,25 @@ let define = function (s_a, s_b) {
   let a = new Tokenizer(s_a)
 
   if (a.type === T_VARI) {
-    scope[a.str] = s_b
+    let newScope = Object.assign({}, this.scope, {[a.str]: s_b})
+    return new Scope(newScope, this)
   } else if (a.type === T_EXPR) {
-    scope[a.args[0]] = function (...args) {
+    let newScope = Object.assign({}, this.scope)
+    newScope[a.args[0]] = function (...args) {
+      // let tmp = {}
+      // for (let i = 1; i < a.args.length; ++i) {
+      //   tmp[a.args[i]] = _this.eval(args[i - 1])
+      // }
+
       let innerScope = Object.assign({}, this.scope)
+      // let NewScope = new Scope(innerScope, this)
       for (let i = 1; i < a.args.length; ++i) {
-        innerScope[a.args[i]] = args[i - 1]
+        // console.log(a.args[i], args[i - 1], this.scope)
+        innerScope[a.args[i]] = args[i - 1] // this.eval(args[i - 1])
       }
       return (new Scope(innerScope, this)).eval(s_b)
     }
+    return new Scope(newScope, this)
   }
 }
 

@@ -106,6 +106,7 @@ class Scope {
         return str.slice(1, -1)
       case T_VARI:
         let v = this.scope[str]
+        // console.log(str, v, this.scope)
         if (typeof v === 'undefined') {
           return this.parent.eval(str)
         }

@@ -14,12 +14,26 @@ var {
 } = require('./default')
 
 const rootScope = new Scope(Object.assign(defaults, { /* define */ }))
-const t = new Scope({}, rootScope)
+
+let t = new Scope({}, rootScope)
+
+function repl(str) {
+  let res = t.eval(str)
+  if (res.constructor === Scope) {
+    // define function
+    t = res
+    res = ''
+  }
+  return res.toString()
+}
 
 if (process && process.argv0 === 'node') {
+  process.stdout.write('> ')
   process.stdin.on('data', function (str) {
-    console.log(t.eval(Buffer(str).toString()))
+    console.log(repl(Buffer(str).toString()))
+    process.stdout.write('> ')
   })
 } else {
   // Browser
+  window.repl = repl
 }
