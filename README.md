@@ -1,6 +1,7 @@
 # scheme
 
-A toy Scheme interpreter implemented with JavaScript ES6.
+A toy Scheme interpreter implemented with JavaScript ES6.  
+Browser REPL: https://quietshu.github.io/scheme
 
 ## Usage
 
