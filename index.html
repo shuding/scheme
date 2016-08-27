@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>scheme</title>
+  <style>
+    body {
+      margin: 0;
+      box-sizing: border-box;
+      font-family: monospace;
+      color: #fff;
+      background-color: #333;
+    }
+    p {
+      font-size: 14px;
+      margin: 5px;
+    }
+    input {
+      width: 100%;
+      width: 100vw;
+      border: none;
+      padding: 5px;
+      font-size: 14px;
+      font-family: monospace;
+      resize: none;
+      box-sizing: border-box;
+      margin: 0;
+      color: #fff;
+      background-color: #444;
+      outline: none;
+      overflow: hidden;
+    }
+    a { color: #37c; }
+    .return { color: #999; }
+  </style>
+</head>
+<body>
+  <div id='result'></div>
+  <input autofocus type='text' value='(+ 1 2)'/>
+  <a style='float: right' href='https://github.com/quietshu/scheme' target='_blank'>github.com/quietshu/scheme</a>
+  <script type="text/javascript" src="scheme.browser.js"></script>
+  <script type="text/javascript">
+    var r = document.getElementById('result')
+    var t = document.getElementsByTagName('input')[0]
+    t.addEventListener('keydown', function (e) {
+      if (e.keyCode === 13 && t.value.trim()) {
+        // enter
+        r.innerHTML += '<p>' + t.value.trim() + '</p>'
+        r.innerHTML += '<p class="return">' + repl(t.value.trim()) + '</p>'
+        t.value = ''
+      }
+    })
+  </script>
+</body>
+</html>
