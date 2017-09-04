@@ -1,0 +1,99 @@
+{
+  "name": "quietshu/scheme",
+  "version": "0.1.4",
+  "libraries": {
+    "xv": "^1.1.25"
+  },
+  "title": "scheme.js",
+  "branch": "",
+  "style": {
+    "name": "Brutalist",
+    "componentSet": {
+      "nav": "nav/BasicNav",
+      "header": "header/BasicHeader",
+      "article": "article/MarkdownArticle",
+      "footer": "footer/BasicFooter"
+    },
+    "fontFamily": "Consolas, \"Liberation Mono\", Menlo, Courier, monospace",
+    "heading": {},
+    "typeScale": [
+      48,
+      32,
+      20,
+      18,
+      16,
+      14,
+      12
+    ],
+    "layout": {
+      "maxWidth": 1024,
+      "fluid": true
+    },
+    "colors": {
+      "text": "#333",
+      "background": "#fff",
+      "primary": "#666",
+      "secondary": "#888",
+      "highlight": "#1f80ff",
+      "muted": "#f6f6f6",
+      "border": "#eee"
+    }
+  },
+  "content": [
+    {
+      "component": "nav",
+      "links": [
+        {
+          "href": "https://shud.in/scheme",
+          "text": "Home"
+        },
+        {
+          "href": "https://github.com/quietshu/scheme",
+          "text": "GitHub"
+        },
+        {
+          "href": "https://npmjs.com/package/scheme",
+          "text": "npm"
+        }
+      ]
+    },
+    {
+      "component": "header",
+      "heading": "scheme",
+      "subhead": "A TOY Scheme interpreter implemented with JavaScript.",
+      "children": [
+        {
+          "component": "ui/TweetButton",
+          "text": "scheme: A TOY Scheme interpreter implemented with JavaScript.",
+          "url": "https://shud.in/scheme"
+        },
+        {
+          "component": "ui/GithubButton",
+          "user": "quietshu",
+          "repo": "scheme"
+        }
+      ],
+      "text": "v0.0.1"
+    },
+    {
+      "component": "article",
+      "metadata": {
+        "source": "github.readme"
+      },
+      "html": "\n<p>A toy Scheme interpreter implemented with JavaScript ES6.<br>Browser REPL: <a href=\"https://quietshu.github.io/scheme\">https://quietshu.github.io/scheme</a></p>\n<h2>Usage</h2>\n<p>NodeJS &gt;= 6</p>\n<p>Run test: <code>node test/test.js</code><br>Run repl: <code>node src/repl.js</code></p>\n<h2>REPL demo</h2>\n<h3>Basic, define, functions</h3>\n<pre>2                                   ; -&gt; 2\n&quot;hello, world&quot;                      ; -&gt; hello, world\ntrue                                ; -&gt; true\n(+ 1 (* 2 (- 3 (/ 4 2))))           ; -&gt; 3\n\n(define the_answer 42)\nthe_answer                          ; -&gt; 42\n\n(define (square x)\n        (* x x))\n(square (square 3))                 ; -&gt; 81\n\n(define (not x)\n        (cond (x false)\n              (true true)))\n(not true)                          ; -&gt; false</pre><h3>Recursive</h3>\n<pre>(<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">define</span></span> (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">if</span></span> x a b)\n        (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">cond</span></span> (<span class=\"hljs-name\">x</span> a)\n              (<span class=\"hljs-name\">true</span> b)))\n\n(<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">define</span></span> (<span class=\"hljs-name\">fact</span> n)\n        (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">if</span></span> (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">=</span></span> <span class=\"hljs-number\">0</span> n)\n            <span class=\"hljs-number\">1</span>\n            (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">*</span></span> n (<span class=\"hljs-name\">fact</span> (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">-</span></span> n <span class=\"hljs-number\">1</span>)))))\n\n(<span class=\"hljs-name\">fact</span> <span class=\"hljs-number\">5</span>)                            <span class=\"hljs-comment\">; -&gt; 120</span></pre><h3>List</h3>\n<pre>(<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">define</span></span> (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">length</span></span> x)\n        (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">cond</span></span> ((<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">=</span></span> null (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">car</span></span> x)) <span class=\"hljs-number\">0</span>)\n              (<span class=\"hljs-name\">true</span> (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">+</span></span> <span class=\"hljs-number\">1</span> (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">length</span></span> (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">cdr</span></span> x))))))\n(<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">length</span></span> (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">list</span></span> <span class=\"hljs-number\">1</span> <span class=\"hljs-number\">2</span> <span class=\"hljs-number\">3</span>))                        <span class=\"hljs-comment\">; -&gt; 3</span></pre><p>Filter</p>\n<pre>(<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">define</span></span> (<span class=\"hljs-name\">filter</span> x y)\n        (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">cond</span></span> ((<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">=</span></span> null (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">car</span></span> x)) (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">list</span></span>))\n              ((<span class=\"hljs-name\">y</span> (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">car</span></span> x)) (<span class=\"hljs-name\">prepend</span> (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">car</span></span> x) (<span class=\"hljs-name\">filter</span> (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">cdr</span></span> x) y)))\n              (<span class=\"hljs-name\">true</span> (<span class=\"hljs-name\">filter</span> (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">cdr</span></span> x) y))))\n\n(<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">define</span></span> (<span class=\"hljs-name\">greater_than_one</span> x)\n        (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">&gt;</span></span> x <span class=\"hljs-number\">1</span>))\n\n(<span class=\"hljs-name\">filter</span> (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">list</span></span> <span class=\"hljs-number\">1</span> <span class=\"hljs-number\">2</span> <span class=\"hljs-number\">3</span> <span class=\"hljs-number\">4</span> <span class=\"hljs-number\">5</span>) greater_than_one)   <span class=\"hljs-comment\">; -&gt; 2,3,4,5,</span></pre><p>Index</p>\n<pre>(<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">define</span></span> (<span class=\"hljs-name\">index</span> x i)\n        (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">cond</span></span> ((<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">=</span></span> i <span class=\"hljs-number\">0</span>) (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">car</span></span> x))\n              (<span class=\"hljs-name\">true</span> (<span class=\"hljs-name\">index</span> (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">cdr</span></span> x) (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">-</span></span> i <span class=\"hljs-number\">1</span>)))))\n(<span class=\"hljs-name\">index</span> (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">list</span></span> <span class=\"hljs-number\">1</span> <span class=\"hljs-number\">2</span> <span class=\"hljs-number\">3</span>) <span class=\"hljs-number\">2</span>)                       <span class=\"hljs-comment\">; -&gt; 3</span></pre><h3>Lambda</h3>\n<pre>((<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">lambda</span></span> <span class=\"hljs-name\">x</span> (+ x 1)) <span class=\"hljs-number\">3</span>)             <span class=\"hljs-comment\">; -&gt; 4</span>\n\n(<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">define</span></span> (<span class=\"hljs-name\">add_x_fn</span> x) (<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">lambda</span></span> <span class=\"hljs-name\">y</span> (+ x y)))\n(<span class=\"hljs-name\"><span class=\"hljs-builtin-name\">define</span></span> add_10_fn (<span class=\"hljs-name\">add_x_fn</span> <span class=\"hljs-number\">10</span>))\n(<span class=\"hljs-name\">add_10_fn</span> <span class=\"hljs-number\">1</span>)                      <span class=\"hljs-comment\">; -&gt; 11</span></pre><h2>JS lib</h2>\n<pre><span class=\"hljs-keyword\">const</span> { Scope, rootScope } = <span class=\"hljs-built_in\">require</span>(<span class=\"hljs-string\">&apos;./src/default&apos;</span>)\n\n<span class=\"hljs-keyword\">let</span> t = <span class=\"hljs-keyword\">new</span> Scope({}, rootScope)\n\nt.eval(<span class=\"hljs-string\">`(+ 1 (* 2 (- 3 (/ 4 2))))`</span>)</pre><p>Immutable (inhertance)</p>\n<pre><span class=\"hljs-keyword\">const</span> { Scope, rootScope } = <span class=\"hljs-built_in\">require</span>(<span class=\"hljs-string\">&apos;./src/default&apos;</span>)\n\n<span class=\"hljs-keyword\">let</span> t = <span class=\"hljs-keyword\">new</span> Scope({}, rootScope), p\n\nt = t.eval(<span class=\"hljs-string\">`(define test 1)`</span>)\np = t.eval(<span class=\"hljs-string\">`(define test 2)`</span>)\n\nt.eval(<span class=\"hljs-string\">`test`</span>) <span class=\"hljs-comment\">// =&gt; 1</span>\np.eval(<span class=\"hljs-string\">`test`</span>) <span class=\"hljs-comment\">// =&gt; 2</span></pre><p>Defaults</p>\n<pre><span class=\"hljs-keyword\">const</span> { Scope, rootScope } = <span class=\"hljs-built_in\">require</span>(<span class=\"hljs-string\">&apos;./src/default&apos;</span>)\n<span class=\"hljs-keyword\">let</span> t = <span class=\"hljs-keyword\">new</span> Scope({ <span class=\"hljs-attr\">x</span>: <span class=\"hljs-number\">2</span> }, rootScope)\n\nt.eval(<span class=\"hljs-string\">`(+ x 1)`</span>) <span class=\"hljs-comment\">// =&gt; 3</span></pre><h2>Acknowledgement</h2>\n<p>No dependencies, built for learning SICP &amp; writing exercises in the book. </p>\n<h2>License</h2>\n<p>MIT License</p>\n<p>Copyright (c) 2016 Shu Ding</p>\n<p>Permission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the &quot;Software&quot;), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:</p>\n<p>The above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.</p>\n<p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.</p>\n"
+    },
+    {
+      "component": "footer",
+      "links": [
+        {
+          "href": "https://github.com/quietshu/scheme",
+          "text": "GitHub"
+        },
+        {
+          "href": "https://github.com/quietshu",
+          "text": "quietshu"
+        }
+      ]
+    }
+  ]
+}
